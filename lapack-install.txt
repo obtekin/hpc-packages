@@ -1,0 +1,11 @@
+module load cmake
+module load gcc/9.5.0
+mkdir lapack
+cd lapack
+wget https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v3.11.0.tar.gz
+tar xvf v3.11.0.tar.gz
+mkdir lapack-3.11.0/build
+cd lapack-3.11.0/build
+cmake .. -DCMAKE_INSTALL_PREFIX=/opt/ohpc/pub/libs/lapack/3.11.0 -DCMAKE_C_COMPILER=gcc -DCMAKE_Fortran_COMPILER=gfortran -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DCMAKE_CXX_FLAGS:STRING=-fPIC -DBUILD_SHARED_LIBS=true
+make -j 8
+make install
