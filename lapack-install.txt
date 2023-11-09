@@ -7,5 +7,6 @@ tar xvf v3.11.0.tar.gz
 mkdir lapack-3.11.0/build
 cd lapack-3.11.0/build
 cmake .. -DCMAKE_INSTALL_PREFIX=/opt/ohpc/pub/libs/lapack/3.11.0 -DCMAKE_C_COMPILER=gcc -DCMAKE_Fortran_COMPILER=gfortran -DCMAKE_POSITION_INDEPENDENT_CODE:BOOL=true -DCMAKE_CXX_FLAGS:STRING=-fPIC -DBUILD_SHARED_LIBS=true
-make -j 8
+make
+mkdir -p /opt/ohpc/pub/libs/lapack/3.11.0
 make install
