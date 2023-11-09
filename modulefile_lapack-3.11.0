@@ -1,0 +1,24 @@
+#%Module1.0#####################################################################
+
+proc ModulesHelp { } {
+
+        puts stderr " "
+        puts stderr "lapack 3.11.0"
+        puts stderr "\nVersion 3.11.0\n"
+
+}
+module-whatis "Name: lapack"
+module-whatis "Version: 3.11.0"
+module-whatis "Category: library"
+
+set     sharedir        /opt/ohpc/pub
+set     category        libs
+set     package         lapack
+set     version         3.11.0
+set     root            $sharedir/$category/$package/$version
+
+prepend-path LD_LIBRARY_PATH $root/lib64
+setenv LAPACK_DIR $root/lib64
+setenv LAPACKDIR $root/lib64
+setenv BLAS_DIR $root/lib64
+setenv BLASDIR $root/lib64
