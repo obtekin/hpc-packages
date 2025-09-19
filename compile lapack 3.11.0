@@ -1,5 +1,5 @@
 module load cmake
-module load gcc/9.5.0
+module load gcc/12.5.0
 mkdir lapack
 cd lapack
 wget https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v3.11.0.tar.gz
