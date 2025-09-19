@@ -1,0 +1,26 @@
+mkdir fftw3
+cd fftw3/
+wget https://fftw.org/fftw-3.3.10.tar.gz
+
+gcc
+-------
+tar xvf fftw-3.3.10.tar.gz
+cd fftw-3.3.10
+#+threads+openmp
+
+./configure --enable-mpi --enable-openmp --enable-shared --disable-static --enable-sse2 --enable-avx2 --enable-avx512 --enable-threads --prefix=/opt/ohpc/pub/libs/fftw/3.3.10
+./configure --enable-mpi --enable-openmp --enable-shared --disable-static --enable-sse2 --enable-avx2 --enable-avx512 --enable-threads --enable-float  --prefix=/opt/ohpc/pub/libs/fftw/3.3.10
+./configure --enable-mpi --enable-openmp --enable-shared --disable-static --enable-avx2 --enable-avx512 --enable-threads --prefix=/opt/ohpc/pub/libs/fftw/3.3.10
+make -j 8
+make install
+
+
+
+
+icc
+-------
+module purge
+cd /opt/ohpc/pub/work/fftw-3.3.10/
+./configure FCC=ifort CC=icc MPICC=mpiicc CFLAGS="-gcc-sys" --enable-mpi --enable-openmp --enable-threads --enable-shared --disable-static --enable-float --enable-avx2 --enable-avx512 --prefix=/opt/ohpc/pub/libs/fftw/3.3.10-intel
+source /opt/ohpc/pub/compiler/oneapi/2022.1/setvars.sh
+
