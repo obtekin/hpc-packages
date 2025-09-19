@@ -2,6 +2,6 @@ wget https://github.com/libevent/libevent/releases/download/release-2.1.12-stabl
 tar xvf libevent-2.1.12-stable.tar.gz libevent-2.1.12-stable/
 cd libevent-2.1.12-stable/
 ./autogen.sh
-./configure --prefix=/home/tekinog1/local/libs/libevent/2.1.12
+./configure --prefix=/opt/ohpc/pub/libs/libevent/2.1.12
 make -j 4
 make install
