@@ -2,6 +2,6 @@ wget https://download.open-mpi.org/release/hwloc/v2.12/hwloc-2.12.2.tar.gz
 tar xvf hwloc-2.12.2.tar.gz
 cd hwloc-2.12.2
 ./autogen.pl
-./configure --prefix=/opt/ohpc/pub/libs/hwloc/2.12.1 --enable-static --enable-shared
+./configure --prefix=/opt/ohpc/pub/libs/hwloc/2.12.1 --enable-static --enable-shared --with-cuda=/opt/ohpc/pub/compiler/cuda/12.2.0
 make -j
 make install
