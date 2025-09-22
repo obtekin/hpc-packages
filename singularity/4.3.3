@@ -1,0 +1,10 @@
+export VERSION=4.3.2
+wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce-${VERSION}.tar.gz && \
+
+dnf -y install fuse3-devel libseccomp-devel cryptsetup
+dnf -y install shadow-utils-subid-devel
+
+./mconfig --prefix=/opt/ohpc/pub/libs/singularity/4.3.2
+	cd builddir
+	make -j
+	make install
