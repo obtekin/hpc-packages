@@ -1,0 +1,6 @@
+wget https://github.com/openucx/ucx/archive/refs/tags/v1.19.0.tar.gz
+tar xvf v1.19.0.tar.gz
+cd ucx-1.19.0
+./configure --prefix=/opt/ohpc/pub/mpi/ucx/1.19.0 --enable-openmp --enable-mt --with-avx --with-rdmacm
+make -j
+make install
