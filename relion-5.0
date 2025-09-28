@@ -1,0 +1,19 @@
+./Miniforge3-Linux-x86_64.sh -b -p /opt/ohpc/pub/apps/relion/5.0/conda
+module load openmpi5 fftw3 fltk/1.4.4 ghostscript libtorch relion/conda ctffind gnu12/12.5.0 cudnn/9.10.2
+module swap cmake/4.0.3 cmake/3.29.2 
+git clone https://github.com/3dem/relion.git
+cd relion/
+git checkout ver5.0
+git pull
+mkdir build
+
+--test-- 
+ cmake .. -DCMAKE_C_COMPILER=/opt/ohpc/pub/compiler/gcc/12.5.0/bin/gcc -DCMAKE_CXX_COMPILER=/opt/ohpc/pub/compiler/gcc/12.5.0/bin/g++ -DCMAKE_INSTALL_PREFIX=/opt/ohpc/pub/apps/relion/5.0 -DCUDA_ARCH=75 -DFETCH_WEIGHTS=OFF -DTORCH_HOME_PATH=/opt/ohpc/pub/libs/libtorch/2.8.0 -DFLTK_LIBRARIES=/opt/ohpc/pub/libs/fltk/1.4.4/lib/libfltk_gl.so -DFLTK_INCLUDE_PATH=/opt/ohpc/pub/libs/fltk/1.4.4/include/FL -DCUDA=ON -DGUI=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+
+make install
+
+--orig--
+cd build/
+ cmake .. -DCMAKE_C_COMPILER=/opt/ohpc/pub/compiler/gcc/12.5.0/bin/gcc -DCMAKE_CXX_COMPILER=/opt/ohpc/pub/compiler/gcc/12.5.0/bin/g++ -DCMAKE_INSTALL_PREFIX=/opt/ohpc/pub/apps/relion/5.0 -DCUDA_ARCH=75 -DFETCH_WEIGHTS=OFF -DTORCH_HOME_PATH=/opt/ohpc/pub/libs/libtorch/2.8.0 -DFLTK_LIBRARIES=/opt/ohpc/pub/libs/fltk/1.3.5/lib/libfltk_gl.so -DFLTK_INCLUDE_PATH=/opt/ohpc/pub/libs/fltk/1.3.5/include/FL -DCUDA=ON -DGUI=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+
+make install
