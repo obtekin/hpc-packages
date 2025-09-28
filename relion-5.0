@@ -1,11 +1,108 @@
 ./Miniforge3-Linux-x86_64.sh -b -p /opt/ohpc/pub/apps/relion/5.0/conda
-module load openmpi5 fftw3 fltk/1.4.4 ghostscript libtorch relion/conda ctffind gnu12/12.5.0 cudnn/9.10.2
+module load openmpi5/5.0.8 fftw3/3.3.10 fltk/1.4.4 ghostscript/10.06 libtorch/2.8.0 ctffind/4.1.14 gnu12/12.5.0 cudnn/9.10.2 cuda/12.9.1 cmake/4.0.3
 module swap cmake/4.0.3 cmake/3.29.2 
 git clone https://github.com/3dem/relion.git
 cd relion/
 git checkout ver5.0
 git pull
+sudo tee environment_blackwell.yml > /dev/null <<'EOF'
+name: relion-5.0
+channels:
+  - conda-forge
+dependencies:
+  - pip
+  - python=3.10
+  - setuptools=59.5.0
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu129
+      - torch==2.8.0+cu129
+      - torchvision==0.23.0+cu129
+      - tqdm==4.65.0
+      - mrcfile==1.4.3
+      - starfile>=0.5.6
+      - loguru==0.7.0
+      - scikit-learn==1.3.0
+      - umap-learn==0.5.3
+      - matplotlib==3.7.2
+      - morphosamplers==0.0.13
+      - pydantic==1.10.18
+      - napari[all]==0.4.18
+      - tsnecuda==3.0.1
+      - PyQt5==5.15.9
+      - typer==0.9.0
+      - click<8.2.0
+      - biopython==1.81
+      - fastcluster==1.2.6
+      - seaborn==0.12.2
+      - dill==0.3.7
+      - numpy==1.26.1
+      - scipy==1.11.2
+      - git+https://github.com/3dem/relion-classranker
+      - git+https://github.com/3dem/relion-blush
+      - git+https://github.com/3dem/DynaMight
+      - git+https://github.com/3dem/topaz
+      - git+https://github.com/3dem/model-angelo
+EOF
+mkdir /opt/ohpc/pub/modulefiles/relion/
+sudo tee /opt/ohpc/pub/modulefiles/relion/conda.lua > /dev/null <<'EOF'
+help([[
+This module loads the Miniconda3 Environment
+
+See the man pages for python for detailed information
+on available compiler options and command-line syntax.
+
+Version 25.7.0
+]])
+
+whatis("Name: Miniconda3")
+whatis("Version: 25.7.0")
+whatis("Category: compiler, runtime support")
+whatis("Description: Miniconda3 (Python 3.12.10 for x86_64)")
+whatis("URL: https://python.org/")
+
+-- -------------------------------------------------------------------------
+-- Paths
+-- -------------------------------------------------------------------------
+local sharedir  = "/opt/ohpc/pub"
+local category  = "apps"
+local package   = "relion"
+local version   = "5.0"
+local conda     = "conda"
+local root      = pathJoin(sharedir, category, package, version, conda)
+
+prepend_path("PATH",            pathJoin(root, "bin"))
+prepend_path("MANPATH",         pathJoin(root, "share/man"))
+prepend_path("INCLUDE",         pathJoin(root, "include"))
+prepend_path("LD_LIBRARY_PATH", pathJoin(root, "lib"))
+prepend_path("LIBPATH",         pathJoin(root, "lib"))
+prepend_path("PYTHONPATH",      pathJoin(root, "lib"))
+
+-- -------------------------------------------------------------------------
+-- Extra initialization similar to bash logic
+-- -------------------------------------------------------------------------
+if (mode() == "load") then
+    local homedir = os.getenv("HOME")
+    local condarc = pathJoin(homedir, ".conda.rc")
+    local conda   = pathJoin(root, "bin/conda")
+    local conda_sh = pathJoin(root, "etc/profile.d/conda.sh")
+
+    -- Disable auto_activate if ~/.conda.rc is missing
+    if (not isFile(condarc)) then
+        execute{cmd=conda .. " config --set auto_activate_base false", modeA={"load"}}
+    end
+
+    -- Initialize conda environment properly
+    if (isFile(conda_sh)) then
+        -- Source conda.sh into the user shell
+        execute{cmd=". " .. conda_sh, modeA={"load"}}
+    else
+        prepend_path("PATH", pathJoin(root, "bin"))
+    end
+end
+EOF
 mkdir build
+
+module load relion/conda
 
 --test-- 
  cmake .. -DCMAKE_C_COMPILER=/opt/ohpc/pub/compiler/gcc/12.5.0/bin/gcc -DCMAKE_CXX_COMPILER=/opt/ohpc/pub/compiler/gcc/12.5.0/bin/g++ -DCMAKE_INSTALL_PREFIX=/opt/ohpc/pub/apps/relion/5.0 -DCUDA_ARCH=75 -DFETCH_WEIGHTS=OFF -DTORCH_HOME_PATH=/opt/ohpc/pub/libs/libtorch/2.8.0 -DFLTK_LIBRARIES=/opt/ohpc/pub/libs/fltk/1.4.4/lib/libfltk_gl.so -DFLTK_INCLUDE_PATH=/opt/ohpc/pub/libs/fltk/1.4.4/include/FL -DCUDA=ON -DGUI=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
