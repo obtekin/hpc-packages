@@ -1,0 +1,62 @@
+Bootstrap: docker
+From: rockylinux:8
+
+%labels
+    Author HPC
+    Application VMD
+    Version 1.9.4a55
+
+%environment
+    export VMDROOT=/opt/vmd
+    export PATH=/opt/vmd/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/vmd/lib:$LD_LIBRARY_PATH
+
+%post
+    dnf -y update
+    dnf -y install \
+        libX11 \
+        libXcursor \
+        libXinerama \
+        libXrandr \
+        libXrender \
+        libXi \
+        libXt \
+        mesa-libGL \
+        mesa-libGLU \
+        libSM \
+        libICE \
+        libXft \
+        libXmu \
+        perl \
+        tcsh \
+        which \
+        wget \
+        tar \
+        gzip \
+        bzip2 \
+        ca-certificates
+
+    dnf clean all
+
+    mkdir -p /opt/vmd
+    chmod 755 /opt/vmd
+
+    chmod +x /tmp/vmd-installer.run
+
+    /tmp/vmd-installer.run <<EOF
+/opt/vmd
+EOF
+
+    rm -f /tmp/vmd-installer.run
+
+%files
+    vmd-1.9.4a55.bin.LINUXAMD64-CUDA11-OptiX7.opengl /tmp/vmd-installer.run
+
+%runscript
+    exec /opt/vmd/bin/vmd "$@"
+
+%help
+    VMD 1.9.4a55 (Visual Molecular Dynamics)
+    Built as a Singularity/Apptainer container.
+    GPU support available if host provides NVIDIA drivers.
+
