@@ -1,0 +1,8 @@
+module load gcc cmake cuda
+wget https://github.com/openucx/ucx/archive/refs/tags/v1.20.0.tar.gz
+tar xvf v1.20.0.tar.gz
+cd ucx-1.20.0
+./autogen.sh
+./configure --prefix=/opt/ohpc/pub/mpi/ucx/1.20.0 --enable-openmp --enable-mt --with-avx --with-rc --with-ud --with-dc --with-dm --with-devx --with-doca-gpunetio  --with-rdmacm --with-cuda
+make -j
+make install
