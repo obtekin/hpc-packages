@@ -2,7 +2,7 @@ Bootstrap: docker
 From: rockylinux:9
 
 %labels
-    Author Euduline
+    Author Myself
     Version v1.1
     Description Rocky Linux 9 with Miniforge
 
