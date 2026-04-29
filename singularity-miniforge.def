@@ -1,0 +1,45 @@
+Bootstrap: docker
+From: rockylinux:9
+
+%labels
+    Author Euduline
+    Version v1.1
+    Description Rocky Linux 9 with Miniforge
+
+%environment
+    export CONDA_DIR=/opt/miniconda3
+    export PATH=$CONDA_DIR/bin:$PATH
+
+%post
+    set -e
+
+    dnf -y update
+    dnf -y install wget bzip2 ca-certificates && dnf clean all
+
+    CONDA_DIR=/opt/miniconda3
+
+    ARCH=$(uname -m)
+    OS=Linux
+
+    # Normalize architecture naming (important)
+    if [ "$ARCH" = "x86_64" ]; then
+        ARCH="x86_64"
+    elif [ "$ARCH" = "aarch64" ]; then
+        ARCH="aarch64"
+    else
+        echo "Unsupported architecture: $ARCH"
+        exit 1
+    fi
+
+    URL="https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-${OS}-${ARCH}.sh"
+
+    wget "$URL" -O /tmp/Miniforge3.sh
+
+    bash /tmp/Miniforge3.sh -b -p $CONDA_DIR
+    rm -f /tmp/Miniforge3.sh
+
+    $CONDA_DIR/bin/conda config --system --set auto_activate_base false
+    $CONDA_DIR/bin/conda update -y conda
+
+%runscript
+    exec /bin/bash "$@"
